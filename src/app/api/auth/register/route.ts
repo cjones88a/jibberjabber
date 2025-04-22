@@ -1,13 +1,10 @@
+import { hash } from 'bcryptjs';
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
-
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const { name, email, password } = body;
+    const { name, email, password } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -18,7 +15,7 @@ export async function POST(request: Request) {
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (existingUser) {
@@ -28,16 +25,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await hash(password, 12);
 
-    // Create user
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-      }
+      },
     });
 
     // Initialize progress for letters and numbers
@@ -58,20 +53,16 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { 
-        message: 'User created successfully',
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        }
+        id: user.id,
+        name: user.name,
+        email: user.email,
       },
       { status: 201 }
     );
-
   } catch (error) {
     console.error('Registration error:', error);
     return NextResponse.json(
-      { error: 'Error creating user' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

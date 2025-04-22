@@ -1,80 +1,83 @@
-# Jibber Jabber 🎨 ✏️ 🎮
+# Jibber Jabber Learning App
 
-A fun and interactive learning app designed to help kids master letter and number recognition through engaging exercises and games.
+A Next.js application for learning letters and numbers with interactive exercises and progress tracking.
 
-## Features
+## Current Progress
 
-- 📚 Progressive learning modules for letters and numbers
-- 🎯 Interactive exercises with immediate feedback
-- 🏆 Achievement system to track progress
-- 🎨 Kid-friendly, colorful interface
-- 🔒 Secure user authentication
-- 📊 Progress tracking
+### Implemented Features
+- Letters learning interface (`/learn/letters`)
+  - Grid view of all letters (A-Z)
+  - Progressive unlocking system (first 5 letters unlocked by default)
+  - Individual letter learning pages with three types of exercises:
+    - Letter Recognition
+    - Sound Exercise (UI only, audio not implemented)
+    - Word Examples
+- Progress tracking API endpoints
+  - Letters progress (`/api/progress/letters`)
+  - Numbers progress (`/api/progress/numbers`)
+- Achievement system for mastering letters and numbers
 
-## Tech Stack
+### Known Issues
+- Prisma client needs initialization (see Setup Instructions)
+- Audio playback not implemented for letter sounds
+- Authentication system needs proper setup
 
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- Prisma (SQLite)
-- NextAuth.js
-- Framer Motion (for animations)
+## Setup Instructions
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ and npm
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/cjones88a/jibberjabber.git
-cd jibberjabber
-```
-
-2. Install dependencies:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Set up environment variables:
+2. Initialize Prisma:
 ```bash
-cp .env.example .env
-```
-
-4. Initialize the database:
-```bash
+# Generate Prisma client
 npx prisma generate
-npx prisma db push
+
+# Run database migrations (if you haven't already)
+npx prisma migrate dev
 ```
 
-5. Run the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Endpoints
 
-## Learning Modules
+### Letters Progress
+- GET `/api/progress/letters` - Get progress for all letters
+- POST `/api/progress/letters` - Update letter progress
+  ```json
+  {
+    "letter": "A",
+    "completed": true,
+    "score": 95
+  }
+  ```
 
-### Letters
-- Uppercase and lowercase recognition
-- Letter sounds
-- Writing practice
-- Word association
+### Numbers Progress
+- GET `/api/progress/numbers` - Get progress for all numbers
+- POST `/api/progress/numbers` - Update number progress
+  ```json
+  {
+    "number": 1,
+    "completed": true,
+    "score": 95
+  }
+  ```
 
-### Numbers
-- Number recognition (0-9)
-- Counting exercises
-- Basic math concepts
-- Number sequencing
+## Next Steps
+1. Set up authentication system properly
+2. Implement audio playback for letter sounds
+3. Create numbers learning interface
+4. Add user dashboard
+5. Implement practice mode
+6. Add achievement notifications and display
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+## Tech Stack
+- Next.js 15.3.1
+- Prisma (Database ORM)
+- NextAuth.js (Authentication)
+- Framer Motion (Animations)
+- TypeScript
